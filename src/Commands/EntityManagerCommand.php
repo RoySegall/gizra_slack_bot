@@ -3,6 +3,7 @@
 namespace Nuntius\Commands;
 
 use Nuntius\Nuntius;
+use Symfony\Component\Config\Definition\NumericNode;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,7 +39,20 @@ class EntityManagerCommand extends Command {
     }
 
     $results = Nuntius::getRethinkDB()
-      ->getTable($arguments['name'])
+      ->getTable($arguments['name']);
+
+    if ($arguments['operation'] == 'live_view') {
+
+      $cursor = $results->changes()->run(Nuntius::getRethinkDB()->getConnection());
+
+      $io->section('Starting live feeds');
+      foreach ($cursor as $row) {
+        var_dump($row->getArrayCopy());
+      }
+
+    }
+
+    $results = $results
       ->limit($arguments['limit'])
       ->run(Nuntius::getRethinkDB()->getConnection());
 
