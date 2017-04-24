@@ -46,10 +46,15 @@ class Nuntius {
   /**
    * Get the container.
    *
+   * @param $autoloader
+   *   The autoloader object. The container will add the custom namespaces. We
+   *   need to do that here since there might be services which defined with one
+   *   of the custom namespaces.
+   *
    * @return ContainerBuilder
    *   The container object.
    */
-  public static function container() {
+  public static function container($autoloader = NULL) {
     static $container;
 
     if ($container) {
@@ -57,10 +62,26 @@ class Nuntius {
       return $container;
     }
 
+    $root_path = new FileLocator(__DIR__ . '/../');
     $container = new ContainerBuilder();
-    $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../'));
+    $loader = new YamlFileLoader($container, $root_path);
 
     $loader->load('services.yml');
+
+    // Get the settings service.
+    if ($autoloader) {
+      $settings = $container->get('config');
+      $namespaces = $settings->getSetting('namespaces');
+
+      foreach ($namespaces as $namespace => $path) {
+        // When the variable contained \\ at the end of the namespace, as it
+        // should be, addPsr4 could not handle that. Removing the last two
+        // backspaces and add them later on fixed that.
+        $namespace = substr($namespace, 0, strlen($namespace) - 2);
+
+        $autoloader->addPsr4("$namespace\\", $path);
+      }
+    }
 
     // Load all the services files.
     foreach (self::getSettings()->getSetting('services') as $service) {
