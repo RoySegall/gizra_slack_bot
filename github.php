@@ -1,6 +1,7 @@
 <?php
 
-require_once 'vendor/autoload.php';
+$autoloaer = require_once 'vendor/autoload.php';
+$container = \Nuntius\Nuntius::container($autoloader);
 
 $client = \Nuntius\Nuntius::bootstrap();
 

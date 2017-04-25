@@ -35,4 +35,7 @@ dispatchers:
     hal: '\Nuntius\Examples\Names\HAL9000::name'
 services:
   - 'services.local.yml'
+namespaces:
+  'DiscoveryOne\\': 'src/Examples/DiscoveryOne/'
+  'Figures\\': 'src/Examples/DiscoveryOne/Figures/'
 access_token: ''

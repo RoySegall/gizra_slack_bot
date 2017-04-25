@@ -1,1 +1,3 @@
 services:
+  ground_control:
+    class: \DiscoveryOne\GroundControl
