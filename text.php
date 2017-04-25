@@ -1,8 +1,7 @@
 <?php
 
-$autoloader = require_once 'vendor/autoload.php';
+$autoloader = require_once 'src/autoloader.php';
 $container = \Nuntius\Nuntius::container($autoloader);
-$group_control = new DiscoveryOne\GroundControl();
 
-Kint::dump($group_control->eagleLand());
-Kint::dump($container->get('ground_control')->liftOff());
+use Figures\Hal9000;
+use DiscoveryOne\GroundControl;
