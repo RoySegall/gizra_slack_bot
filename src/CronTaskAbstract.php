@@ -56,4 +56,11 @@ abstract class CronTaskAbstract implements CronTaskInterface {
     return $this->period;
   }
 
+  /**
+   * @return string
+   */
+  public function getName() {
+    return $this->name;
+  }
+
 }

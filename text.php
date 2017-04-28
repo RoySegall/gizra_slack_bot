@@ -2,7 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
-$container = \Nuntius\Nuntius::container();
+$crons = \Nuntius\Nuntius::getCronTasksManager();
 
-$foo = \Nuntius\Nuntius::getCronTasksManager();
-Kint::dump($foo->getCronTask('log')->getPeriod());
+foreach ($crons->getCronTasks() as $cron_task) {
+  Kint::dump($cron_task->getPeriod());
+}

@@ -24,6 +24,7 @@ commands:
   - '\Nuntius\Commands\UpdateCommand'
   - '\Nuntius\Commands\InstallCommand'
   - '\Nuntius\Commands\EntityManagerCommand'
+  - '\Nuntius\Commands\CronCommand'
 webhooks:
   github:
     opened: '\Nuntius\Webhooks\GitHub\Opened'

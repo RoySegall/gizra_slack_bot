@@ -28,4 +28,12 @@ interface CronTaskInterface {
    */
   public function getPeriod();
 
+  /**
+   * Get the name.
+   *
+   * @return string
+   *   The name of the task.
+   */
+  public function getName();
+
 }
