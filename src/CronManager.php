@@ -38,5 +38,27 @@ class CronManager {
     return $this;
   }
 
-}
+  /**
+   * Get all the cron tasks.
+   *
+   * @return CronTaskInterface[]
+   *   All the cron task objects.
+   */
+  public function getCronTasks() {
+    return $this->cronTasks;
+  }
 
+  /**
+   * Get a cron task.
+   *
+   * @param $task
+   *   The cron task id.
+   *
+   * @return CronTaskInterface
+   *   The cron task controller.
+   */
+  public function getCronTask($task) {
+    return $this->cronTasks[$task];
+  }
+
+}

@@ -35,4 +35,6 @@ dispatchers:
     hal: '\Nuntius\Examples\Names\HAL9000::name'
 services:
   - 'services.local.yml'
+cron:
+  log: '\Nuntius\Cron\LogThings'
 access_token: ''
