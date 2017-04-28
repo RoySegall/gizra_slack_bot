@@ -26,6 +26,7 @@ class CronCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
+    Nuntius::getEntityManager()->get('logger')->insert(['a' => 'bar']);
     Nuntius::getCronTasksManager()->getCronTask($input->getArgument('cron_task'))->run();
   }
 

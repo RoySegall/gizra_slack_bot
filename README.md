@@ -583,6 +583,11 @@ services:
 By default, you can add services in the `services.local.yml` but if you want to
 manage that in other files you can add them in the `settings.local.yml` file.
 
+## Cron tasks
+```
+*/1 * * * * /Applications/MAMP/bin/php/php7.0.13/bin/php /Applications/MAMP/htdocs/nuntius-bot/cron.php >/dev/null 2>&1
+```
+
 ## Uncovered API to this point
 We covered a lot of the integration you can have with Nuntius and slack but
 let's look at some code snippets:
