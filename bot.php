@@ -2,12 +2,9 @@
 
 require_once 'vendor/autoload.php';
 
-use React\EventLoop\Factory;
-
 // Bootstrapping.
 $client = \Nuntius\Nuntius::bootstrap();
 $settings = \Nuntius\Nuntius::getSettings();
-$client_loop = React\EventLoop\Factory::create();
 
 // Iterating over the plugins and register them for Slack events.
 foreach ($settings->getSetting('events') as $event => $namespace) {
@@ -29,4 +26,4 @@ $client->connect()->then(function () {
 });
 
 // Starting the work.
-$client_loop->run();
+\Nuntius\Nuntius::run();
