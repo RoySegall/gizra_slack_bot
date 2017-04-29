@@ -1,10 +1,12 @@
 <?php
 
+use Nuntius\Nuntius;
+
 require_once 'vendor/autoload.php';
 
 // Bootstrapping.
-$client = \Nuntius\Nuntius::bootstrap();
-$settings = \Nuntius\Nuntius::getSettings();
+$client = Nuntius::bootstrap();
+$settings = Nuntius::getSettings();
 
 // Iterating over the plugins and register them for Slack events.
 foreach ($settings->getSetting('events') as $event => $namespace) {
@@ -26,4 +28,4 @@ $client->connect()->then(function () {
 });
 
 // Starting the work.
-\Nuntius\Nuntius::run();
+Nuntius::run();
