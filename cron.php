@@ -4,11 +4,19 @@ require 'vendor/autoload.php';
 
 $resolver = new \Cron\Resolver\ArrayResolver();
 
+$tasks = \Nuntius\Nuntius::getCronTasksManager()->getCronTasks();
+
 // Get all the tasks.
-foreach (\Nuntius\Nuntius::getCronTasksManager()->getCronTasks() as $cron_task) {
+foreach ($tasks as $cron_task) {
   $job = new \Cron\Job\ShellJob();
-  $job->setCommand('/Applications/MAMP/bin/php/php7.0.13/bin/php ' . __DIR__ . '/console.php nuntius:cron ' . $cron_task->getName());
+  $job->setCommand('echo "a"');
   $job->setSchedule(new \Cron\Schedule\CrontabSchedule($cron_task->getPeriod()));
+
+  if ($job->valid(new DateTime())) {
+    // Running the command here and not via a shell command since that's did not
+    // worked and the command never ran.
+    $cron_task->run();
+  }
 
   // Register the task.
   $resolver->addJob($job);

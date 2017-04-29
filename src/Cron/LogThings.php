@@ -4,22 +4,24 @@ namespace Nuntius\Cron;
 
 use Nuntius\CronTaskAbstract;
 use Nuntius\CronTaskInterface;
-use Nuntius\EntityManager;
 
 class LogThings extends CronTaskAbstract implements CronTaskInterface {
 
   /**
    * {@inheritdoc}
    */
-  protected $period = '*/5 * * * *';
+  protected $period = '*/1 * * * *';
 
   /**
    * {@inheritdoc}
    */
   public function run() {
-    /** @var EntityManager $entity_manager */
-    $entity_manager = $this->container->get('manager.entity');
-    $entity_manager->get('logger')->insert(['time' => time()]);
+    $this->container->get('manager.entity')
+      ->get('logger')
+      ->insert([
+        'inside' => 'yes',
+        'time' => date('d/m/Y H:i', time()),
+      ]);
   }
 
 }

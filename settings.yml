@@ -24,7 +24,6 @@ commands:
   - '\Nuntius\Commands\UpdateCommand'
   - '\Nuntius\Commands\InstallCommand'
   - '\Nuntius\Commands\EntityManagerCommand'
-  - '\Nuntius\Commands\CronCommand'
 webhooks:
   github:
     opened: '\Nuntius\Webhooks\GitHub\Opened'
@@ -37,5 +36,7 @@ dispatchers:
 services:
   - 'services.local.yml'
 cron:
+  ## Keep that one to see the cron task is working. You can comment out once
+  ## it's OK.
   log: '\Nuntius\Cron\LogThings'
 access_token: ''
