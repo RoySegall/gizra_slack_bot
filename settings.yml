@@ -29,10 +29,13 @@ webhooks:
     opened: '\Nuntius\Webhooks\GitHub\Opened'
 dispatcher:
   names: '\Nuntius\Examples\Names\NameEvent'
+  github_opened: '\Nuntius\Dispatcher\GitHubEvent'
 dispatchers:
   names:
     tom: '\Nuntius\Examples\Names\Tom::name'
     hal: '\Nuntius\Examples\Names\HAL9000::name'
+  github_opened:
+    notify_user: '\Nuntius\Examples\GitHubOpened\Gizra::Notify'
 services:
   - 'services.local.yml'
 cron:
