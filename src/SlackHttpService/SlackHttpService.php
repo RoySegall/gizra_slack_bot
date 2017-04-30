@@ -52,7 +52,7 @@ class SlackHttpService {
   }
 
   /**
-   * Apply request to slack HTTP api.
+   * Apply a GET request to slack HTTP api.
    *
    * @param string $api
    *   The api of slack - user.list, user.info etc. etc.
@@ -62,6 +62,23 @@ class SlackHttpService {
    */
   public function request($api) {
     return $this->http->request('get', 'https://slack.com/api/' . $api, ['query' => ['token' => $this->accessToken]]);
+  }
+
+  /**
+   * Apply a POST request to slack HTTP api.
+   *
+   * @param string $api
+   *   The api of slack - user.list, user.info etc. etc.
+   * @param $payload
+   *   The payload of the post request.
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The response interface.
+   */
+  public function post($api, SlackHttpPayloadServiceAbstract $payload) {
+    return $this->http->request('post', 'https://slack.com/api/' . $api, [
+      'json' => $payload->getPayload() + ['token' => $this->accessToken],
+    ]);
   }
 
   /**
@@ -80,7 +97,7 @@ class SlackHttpService {
   }
 
   /**
-   * Get the users api controller.
+   * Get the users api service.
    *
    * @return SlackHttpServiceUsers
    *   The user service.
@@ -90,13 +107,23 @@ class SlackHttpService {
   }
 
   /**
-   * Get the IM serice.
+   * Get the IM service.
    *
    * @return SlackHttpServiceIm
    *   The IM service.
    */
   public function Im() {
     return new SlackHttpServiceIm($this);
+  }
+
+  /**
+   * Get the chat service.
+   *
+   * @return SlackHttpServiceChat
+   *   The chat service.
+   */
+  public function Chat() {
+    return new SlackHttpServiceChat($this);
   }
 
 }

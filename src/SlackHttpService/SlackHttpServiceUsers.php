@@ -10,7 +10,7 @@ class SlackHttpServiceUsers extends SlackHttpServiceHandlerAbstract {
   /**
    * {@inheritdoc}
    */
-  protected $main_api = 'users';
+  protected $mainApi = 'users';
 
   /**
    * Get list of user and information.

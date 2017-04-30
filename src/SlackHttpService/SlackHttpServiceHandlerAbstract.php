@@ -21,7 +21,7 @@ abstract class SlackHttpServiceHandlerAbstract {
    *
    * @var string
    */
-  protected $main_api;
+  protected $mainApi;
 
   /**
    * SlackHttpServiceUsers constructor.
@@ -43,7 +43,7 @@ abstract class SlackHttpServiceHandlerAbstract {
    *   The JSON representation of the user list request.
    */
   protected function decodeApiRequest($sub_api) {
-    return $this->decodeRequest($this->slackHttpService->request($this->main_api . '.' . $sub_api));
+    return $this->decodeRequest($this->slackHttpService->request($this->mainApi . '.' . $sub_api));
   }
 
   /**
