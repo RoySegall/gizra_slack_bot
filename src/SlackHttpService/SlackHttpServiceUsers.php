@@ -23,7 +23,7 @@ class SlackHttpServiceUsers extends SlackHttpServiceHandlerAbstract {
   }
 
   /**
-   * Get user by name.
+   * Get user by ID.
    *
    * @param string $id
    *   The name.
@@ -32,7 +32,27 @@ class SlackHttpServiceUsers extends SlackHttpServiceHandlerAbstract {
    *   The JSON representation of the user list request.
    */
   public function getUserById($id) {
-    return $this->slackHttpService->requestWithArguments('users.list', ['user' => $id]);
+    return $this->decodeRequest($this->slackHttpService->requestWithArguments('users.info', ['user' => $id]));
+  }
+
+  /**
+   * Get user by name.
+   *
+   * @param $name
+   *   The name of the user.
+   *
+   * @return \stdClass
+   *   The JSON representation of the user list request.
+   */
+  public function getUserByName($name) {
+    $users_filtered = array_filter(array_map(function($user) use ($name) {
+      if ($user->name == $name) {
+        return $user;
+      }
+      return;
+    }, $this->getList()->members));
+
+    return reset($users_filtered);
   }
 
 }

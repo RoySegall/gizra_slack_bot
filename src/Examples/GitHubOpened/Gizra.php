@@ -16,6 +16,12 @@ class Gizra {
 
     \Kint::dump($response);
 
+    $user = $slack_http
+      ->setAccessToken(Nuntius::getSettings()->getSetting('access_token'))
+      ->Users()->getUserByName('roysegall');
+
+    \Kint::dump($user);
+
   }
 
 }

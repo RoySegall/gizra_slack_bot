@@ -1,6 +1,7 @@
 <?php
 
 namespace SlackHttpService;
+
 use Psr\Http\Message\ResponseInterface;
 
 /**

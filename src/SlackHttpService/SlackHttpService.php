@@ -64,8 +64,19 @@ class SlackHttpService {
     return $this->http->request('get', 'https://slack.com/api/' . $api, ['query' => ['token' => $this->accessToken]]);
   }
 
+  /**
+   * Apply request to slack HTTP api.
+   *
+   * @param string $api
+   *   The api of slack - user.list, user.info etc. etc.
+   * @param array $arguments
+   *   Passing arguments in the request for a end point with arguments.
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The response interface.
+   */
   public function requestWithArguments($api, array $arguments) {
-    $this->http->request('get', 'https://slack.com/api/' . $api, ['query' => ['token' => $this->accessToken] + $arguments]);
+    return $this->http->request('get', 'https://slack.com/api/' . $api, ['query' => ['token' => $this->accessToken] + $arguments]);
   }
 
   /**
