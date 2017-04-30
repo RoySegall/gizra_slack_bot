@@ -4,16 +4,18 @@ namespace Nuntius\Examples\GitHubOpened;
 
 use Nuntius\Dispatcher\GitHubEvent;
 use Nuntius\Nuntius;
-use Slack\ChannelInterface;
 
 class Gizra {
 
   public function Notify(GitHubEvent $event) {
-    $client = Nuntius::bootstrap();
 
-    $client->getUserByName('roysegall')->then(function (ChannelInterface $channel) use ($client) {
-      $client->send('Hi user!', $channel);
-    });
+    $slack_http = new \SlackHttpService\SlackHttpService();
+    $response = $slack_http
+      ->setAccessToken(Nuntius::getSettings()->getSetting('access_token'))
+      ->Users()->getList();
+
+    \Kint::dump($response);
+
   }
 
 }

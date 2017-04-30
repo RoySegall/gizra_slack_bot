@@ -18,12 +18,14 @@
     "symfony/event-dispatcher": "^3.2",
     "symfony/dependency-injection": "^3.2",
     "symfony/config": "^3.2",
-    "Cron/Cron": "^1.2"
+    "Cron/Cron": "^1.2",
+    "wrapi/slack": "^0.1.5"
   },
   "autoload": {
     "psr-4": {
       "Nuntius\\": "src/",
-      "tests\\": "tests/"
+      "tests\\": "tests/",
+      "SlackHttpService\\": "src/SlackHttpService/"
     }
   },
   "require-dev": {
