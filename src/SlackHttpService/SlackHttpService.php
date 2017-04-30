@@ -89,4 +89,14 @@ class SlackHttpService {
     return new SlackHttpServiceUsers($this);
   }
 
+  /**
+   * Get the IM serice.
+   *
+   * @return SlackHttpServiceIm
+   *   The IM service.
+   */
+  public function Im() {
+    return new SlackHttpServiceIm($this);
+  }
+
 }
