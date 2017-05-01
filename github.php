@@ -29,7 +29,9 @@ if (!$namespace = \Nuntius\Nuntius::getSettings()->getSetting('webhooks')['githu
 $webhook = new $namespace;
 
 // Acting.
-$webhook->setData($payload)->act();
+$webhook
+  ->setData($payload)
+  ->act();
 
 // Post acting.
 $webhook->postAct();

@@ -15,10 +15,12 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
    * {@inheritdoc}
    */
   public function act(GitHubEvent $event) {
+    // Get the data from the event.
     $data = $event->getData();
 
     $key = empty($data->pull_request) ? 'issue' : 'pull_request';
 
+    // Build the info variable to the post message method.
     $info = [
       'image' => $data->{$key}->user->avatar_url,
       'username' => $data->{$key}->user->login,
@@ -43,10 +45,14 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
    *   Information relate to
    */
   protected function postMessage($info) {
+    // Get the slack http service.
     $slack_http = new SlackHttpService();
     $slack = $slack_http->setAccessToken(Nuntius::getSettings()->getSetting('access_token'));
-    $im = $slack->Im()->getImForUser($slack->Users()->getUserByName(strtolower($info['username'])));
 
+    // Get the IM room.
+    $im_room = $slack->Im()->getImForUser($slack->Users()->getUserByName(strtolower($info['username'])));
+
+    // Build the attachment.
     $attachment = new SlackHttpPayloadServiceAttachments();
     $attachment
       ->setColor('#36a64f')
@@ -58,12 +64,14 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
 
     $attachments[] = $attachment;
 
+    // Build the payload of the message.
     $message = new SlackHttpPayloadServicePostMessage();
     $message
-      ->setChannel($im)
+      ->setChannel($im_room)
       ->setAttachments($attachments)
       ->setText($info['text']);
 
+    // Posting the message.
     $slack->Chat()->postMessage($message);
   }
 
