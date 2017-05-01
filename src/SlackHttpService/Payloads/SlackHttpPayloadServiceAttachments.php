@@ -11,22 +11,7 @@ class SlackHttpPayloadServiceAttachments extends SlackHttpPayloadServiceAbstract
    * {@inheritdoc}
    */
   protected function setDefaults() {
-    $this->payload = [
-      'fallback' => '',
-      'color' => '',
-      'pretext' => '',
-      'author_name' => '',
-      'author_icon' => '',
-      'title' => '',
-      'title_link' => '',
-      'text' => '',
-      'fields' => [],
-      'image_url' => '',
-      'thumb_url' => '',
-      'footer' => '',
-      'footer_icon' => '',
-      'ts' => '',
-    ];
+    $this->payload = [];
   }
 
   /**

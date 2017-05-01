@@ -84,9 +84,12 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
    */
   public function setAttachments(array $attachments) {
 
+    $attachments_json = [];
     foreach ($attachments as $key => $attachment) {
-      $this->payload['attachments'][$key] = $attachment->getPayload();
+      $attachments_json[] = json_encode($attachment->getPayload());
     }
+
+    $this->payload['attachments'] = '[' . implode(',', $attachments_json) . ']';
 
     return $this;
   }
