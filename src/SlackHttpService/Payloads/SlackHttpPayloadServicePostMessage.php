@@ -8,6 +8,13 @@ namespace SlackHttpService\Payloads;
 class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setDefaults() {
+    $this->payload = [];
+  }
+
+  /**
    * Set the channel.
    *
    * @param $channel
@@ -69,14 +76,14 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
   /**
    * Set the attachment.
    *
-   * @param $attachments
+   * @param SlackHttpPayloadServiceAttachments $attachments
    *   The attachment.
    *
    * @return SlackHttpPayloadServicePostMessage
    *   The current instance.
    */
-  public function setAttachments($attachments) {
-    $this->payload['attachments'] = $attachments;
+  public function setAttachments(SlackHttpPayloadServiceAttachments $attachments) {
+    $this->payload['attachments'] = $attachments->getPayload();
 
     return $this;
   }

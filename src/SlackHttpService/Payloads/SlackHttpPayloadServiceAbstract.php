@@ -15,6 +15,13 @@ abstract class SlackHttpPayloadServiceAbstract {
   protected $payload = [];
 
   /**
+   * Constructing the class.
+   */
+  function __construct() {
+    $this->setDefaults();
+  }
+
+  /**
    * Get the payload.
    *
    * @return array
@@ -23,5 +30,12 @@ abstract class SlackHttpPayloadServiceAbstract {
   public function getPayload() {
     return $this->payload;
   }
+
+  /**
+   * Set defaults of payload values.
+   *
+   * @return mixed
+   */
+  abstract protected function setDefaults();
 
 }
