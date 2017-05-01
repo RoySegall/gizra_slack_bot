@@ -15,7 +15,27 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
    * {@inheritdoc}
    */
   public function act(GitHubEvent $event) {
-    Nuntius::getEntityManager()->get('logger')->insert($event->getData());
+    $data = $event->getData();
+
+    if (!empty($data->pull_request)) {
+      $info = [
+        'image' => $data->pull_request->user->avatar_url,
+        'username' => $data->pull_request->user->login,
+        'url' => $data->pull_request->url,
+        'title' => $data->pull_request->title,
+      ];
+
+      $info['text'] = 'Hi ' . $info['username'] . ', You create a PR <' . $info['url'] . '|' . $info['title'] . '>';
+    }
+
+    $slack_http = new SlackHttpService();
+    $slack = $slack_http->setAccessToken(Nuntius::getSettings()->getSetting('access_token'));
+    $im = $slack->Im()->getImForUser($slack->Users()->getUserByName(strtolower($info['username'])));
+
+    $message = new SlackHttpPayloadServicePostMessage();
+    $message
+      ->setChannel($im)
+      ->setText($info['text']);
 
     return;
     $slack_http = new SlackHttpService();
@@ -28,15 +48,11 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
       ->setText('foo')
       ->setColor('#ff9900')
       ->setTitle('New PR')
-      ->setTitle('http://google.com');
+      ->setTitle('http://google.com')
+      ->setImageUrl();
 
     $attachments[] = $attachment;
 
-    $message = new SlackHttpPayloadServicePostMessage();
-    $message
-      ->setChannel($im)
-      ->setText('Hi Roy Segall! you pushed a commit to PR <http://www.foo.com|PR title>')
-      ->setAttachments($attachments);
 
     \Kint::dump($slack->Chat()->postMessage($message));
   }

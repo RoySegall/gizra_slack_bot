@@ -67,9 +67,9 @@ class NuntiusDispatcher {
   public function dispatch($event, $data = NULL) {
     $event_dispatcher = $this->getEventDispatcher($event);
 
-//    if (method_exists($event_dispatcher, 'setData') && $data) {
-//      $event_dispatcher->setData($data);
-//    }
+    if (method_exists($event_dispatcher, 'setData') && $data) {
+      $event_dispatcher->setData($data);
+    }
 
     return $this->dispatcher->dispatch($event, $event_dispatcher);
   }
