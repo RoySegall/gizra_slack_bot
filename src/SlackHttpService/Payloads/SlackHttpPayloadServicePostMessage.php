@@ -76,14 +76,17 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
   /**
    * Set the attachment.
    *
-   * @param SlackHttpPayloadServiceAttachments $attachments
-   *   The attachment.
+   * @param SlackHttpPayloadServiceAttachments[] $attachments
+   *   The attachment array.
    *
    * @return SlackHttpPayloadServicePostMessage
    *   The current instance.
    */
-  public function setAttachments(SlackHttpPayloadServiceAttachments $attachments) {
-    $this->payload['attachments'] = $attachments->getPayload();
+  public function setAttachments(array $attachments) {
+
+    foreach ($attachments as $key => $attachment) {
+      $this->payload['attachments'][$key] = $attachment->getPayload();
+    }
 
     return $this;
   }
