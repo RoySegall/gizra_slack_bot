@@ -52,6 +52,7 @@ dispatchers:
     tom: '\Nuntius\Examples\Names\Tom::name'
     hal: '\Nuntius\Examples\Names\HAL9000::name'
   github_opened:
+    # Comment out or override when you don't want to see the webhook example.
     notify_user: '\Nuntius\Examples\GitHubOpened\NuntiusGitHubOpenedExample::act'
 
 # Local services.
