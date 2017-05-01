@@ -32,51 +32,173 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
    */
   public function setText($text) {
     $this->payload['text'] = $text;
+
     return $this;
   }
 
-  public function setParse() {
+  /**
+   * Set the parse.
+   *
+   * @param $parse
+   *   The parse value.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setParse($parse) {
+    $this->payload['parse'] = $parse;
+
     return $this;
   }
 
-  public function setLinkNames() {
+  /**
+   * Set links names.
+   *
+   * @param $link_names
+   *   The links names.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setLinkNames($link_names) {
+    $this->payload['link_names'] = $link_names;
+
     return $this;
   }
 
-  public function setAttachments() {
+  /**
+   * Set the attachment.
+   *
+   * @param $attachments
+   *   The attachment.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setAttachments($attachments) {
+    $this->payload['attachments'] = $attachments;
+
     return $this;
   }
 
-  public function setUnfurlLinks() {
+  /**
+   * Set the unfurl links.
+   *
+   * @param $unfurl_links
+   *   The unfurl links.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setUnfurlLinks($unfurl_links) {
+    $this->payload['unfurl_links'] = $unfurl_links;
+
     return $this;
   }
 
-  public function setUnfurlMedia() {
+  /**
+   * Set the unfurl links.
+   *
+   * @param $unfurl_links
+   *   The unfurl links.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setUnfurlMedia($unfurl_links) {
+    $this->payload['unfurl_links'] = $unfurl_links;
+
     return $this;
   }
 
-  public function setUsername() {
+  /**
+   * Set the username.
+   *
+   * @param $username
+   *   The username.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setUsername($username) {
+    $this->payload['username'] = $username;
+
     return $this;
   }
 
-  public function setAsUser() {
+  /**
+   * Set the as user.
+   *
+   * @param $as_user
+   *   The as user.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setAsUser($as_user) {
+    $this->payload['as_user'] = $as_user;
+
     return $this;
   }
 
-  public function setIconUrl() {
+  /**
+   * Set the icon URL.
+   *
+   * @param $icon_url
+   *   The icon url.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setIconUrl($icon_url) {
+    $this->payload['icon_url'] = $icon_url;
+
     return $this;
   }
 
-  public function setIconEmoji() {
+  /**
+   * Set the emoji icon.
+   *
+   * @param $icon_emoji
+   *   The emoji icon.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setIconEmoji($icon_emoji) {
+    $this->payload['icon_emoji'] = $icon_emoji;
+
     return $this;
   }
 
-  public function setThreadTs() {
+  /**
+   * Set the thread ts.
+   *
+   * @param $thread_ts
+   *   The thread ts.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setThreadTs($thread_ts) {
+    $this->payload['thread_ts'] = $thread_ts;
 
+    return $this;
   }
 
-  public function setReplyBroadcast() {
+  /**
+   * Set the reply brod cast.
+   *
+   * @param $reply_broadcast
+   *   The reply brod cast.
+   *
+   * @return SlackHttpPayloadServicePostMessage
+   *   The current instance.
+   */
+  public function setReplyBroadcast($reply_broadcast) {
+    $this->payload['reply_broadcast'] = $reply_broadcast;
 
+    return $this;
   }
 
 }
