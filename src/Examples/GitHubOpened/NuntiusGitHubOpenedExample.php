@@ -3,15 +3,21 @@
 namespace Nuntius\Examples\GitHubOpened;
 
 use Nuntius\Dispatcher\GitHubEvent;
+use Nuntius\Dispatcher\GitHubOpenedEventInterface;
 use Nuntius\Nuntius;
 use SlackHttpService\Payloads\SlackHttpPayloadServiceAttachments;
 use SlackHttpService\Payloads\SlackHttpPayloadServicePostMessage;
 use SlackHttpService\SlackHttpService;
 
-class Gizra {
+class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
 
-  public function Notify(GitHubEvent $event) {
+  /**
+   * {@inheritdoc}
+   */
+  public function act(GitHubEvent $event) {
+    Nuntius::getEntityManager()->get('logger')->insert($event->getData());
 
+    return;
     $slack_http = new SlackHttpService();
 
     $slack = $slack_http->setAccessToken(Nuntius::getSettings()->getSetting('access_token'));
