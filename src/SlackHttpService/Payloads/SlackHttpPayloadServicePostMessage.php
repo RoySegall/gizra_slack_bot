@@ -11,7 +11,18 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
    * {@inheritdoc}
    */
   protected function setDefaults() {
-    $this->payload = [];
+    $this->payload = [
+      'parse' => 'none',
+      'link_names' => TRUE,
+      'attachments' => json_encode([]),
+      'unfurl_links' => TRUE,
+      'unfurl_media' => FALSE,
+      'username' => 'Nuntius',
+      'as_user' => TRUE,
+      'icon_emoji' => '',
+      'thread_ts' => '',
+      'reply_broadcast' => '',
+    ];
   }
 
   /**

@@ -26,16 +26,6 @@ class Gizra {
 
     $attachments[] = $attachment;
 
-    $attachment = new SlackHttpPayloadServiceAttachments();
-    $attachment
-      ->setText('foo')
-      ->setColor('#ffaass')
-      ->setTitle('New PR')
-      ->setTitle('http://google.com');
-
-    $attachments[] = $attachment;
-
-
     $message = new SlackHttpPayloadServicePostMessage();
     $message
       ->setChannel($im)
