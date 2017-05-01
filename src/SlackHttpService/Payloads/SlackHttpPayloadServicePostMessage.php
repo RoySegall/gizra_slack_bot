@@ -22,6 +22,7 @@ class SlackHttpPayloadServicePostMessage extends SlackHttpPayloadServiceAbstract
       'icon_emoji' => '',
       'thread_ts' => '',
       'reply_broadcast' => '',
+      'mrkdwn' => TRUE,
     ];
   }
 

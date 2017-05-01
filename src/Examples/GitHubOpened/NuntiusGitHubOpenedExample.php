@@ -17,44 +17,54 @@ class NuntiusGitHubOpenedExample implements GitHubOpenedEventInterface {
   public function act(GitHubEvent $event) {
     $data = $event->getData();
 
-    if (!empty($data->pull_request)) {
-      $info = [
-        'image' => $data->pull_request->user->avatar_url,
-        'username' => $data->pull_request->user->login,
-        'url' => $data->pull_request->url,
-        'title' => $data->pull_request->title,
-      ];
+    $key = empty($data->pull_request) ? 'issue' : 'pull_request';
 
-      $info['text'] = 'Hi ' . $info['username'] . ', You create a PR <' . $info['url'] . '|' . $info['title'] . '>';
-    }
+    $info = [
+      'image' => $data->{$key}->user->avatar_url,
+      'username' => $data->{$key}->user->login,
+      'url' => $data->{$key}->html_url,
+      'title' => $data->{$key}->title,
+      'body' => $data->{$key}->body,
+      'created' => $data->{$key}->created_at,
+    ];
 
+    $info['text'] = 'Hi ' . $info['username'];
+    $info['text'] .= $key == 'issue' ? ', You created an issue' : ', You created a PR';
+
+    $info['footer'] = 'Created at ' . $info['created'];
+
+    $this->postMessage($info);
+  }
+
+  /**
+   * Posting the message.
+   *
+   * @param $info
+   *   Information relate to
+   */
+  protected function postMessage($info) {
     $slack_http = new SlackHttpService();
     $slack = $slack_http->setAccessToken(Nuntius::getSettings()->getSetting('access_token'));
     $im = $slack->Im()->getImForUser($slack->Users()->getUserByName(strtolower($info['username'])));
 
-    $message = new SlackHttpPayloadServicePostMessage();
-    $message
-      ->setChannel($im)
-      ->setText($info['text']);
-
-    return;
-    $slack_http = new SlackHttpService();
-
-    $slack = $slack_http->setAccessToken(Nuntius::getSettings()->getSetting('access_token'));
-    $im = $slack->Im()->getImForUser($slack->Users()->getUserByName('roysegall'));
-
     $attachment = new SlackHttpPayloadServiceAttachments();
     $attachment
-      ->setText('foo')
-      ->setColor('#ff9900')
-      ->setTitle('New PR')
-      ->setTitle('http://google.com')
-      ->setImageUrl();
+      ->setColor('#36a64f')
+      ->setTitle($info['title'])
+      ->setTitleLink($info['url'])
+      ->setText($info['body'])
+      ->setThumbUrl($info['image'])
+      ->setFooter($info['footer']);
 
     $attachments[] = $attachment;
 
+    $message = new SlackHttpPayloadServicePostMessage();
+    $message
+      ->setChannel($im)
+      ->setAttachments($attachments)
+      ->setText($info['text']);
 
-    \Kint::dump($slack->Chat()->postMessage($message));
+    $slack->Chat()->postMessage($message);
   }
 
 }
