@@ -44,7 +44,7 @@ class GithubWebhooksTest extends GithubWebhooksTestsAbstract {
   /**
    * Testing processing for known github webhooks.
    */
-  public function _testKnownWebhook() {
+  public function testKnownWebhook() {
     $this->mockOpenWebhook('pull_request');
     $this->mockOpenWebhook('issue');
   }
