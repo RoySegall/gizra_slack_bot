@@ -1,6 +1,6 @@
 <?php
 
-namespace SlackHttpService;
+namespace SlackHttpService\Services;
 
 /**
  * Handle the IM part of the rest api with slack.

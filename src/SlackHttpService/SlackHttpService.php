@@ -2,6 +2,8 @@
 
 namespace SlackHttpService;
 
+use SlackHttpService\Payloads\SlackHttpPayloadServiceAbstract;
+
 /**
  * Main controller for the Slack HTTP request manager.
  */

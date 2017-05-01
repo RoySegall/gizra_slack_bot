@@ -1,6 +1,6 @@
 <?php
 
-namespace SlackHttpService;
+namespace SlackHttpService\Payloads;
 
 /**
  * Post message payload object.

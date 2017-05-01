@@ -1,6 +1,6 @@
 <?php
 
-namespace SlackHttpService;
+namespace SlackHttpService\Payloads;
 
 /**
  * Base class to all payload objects.

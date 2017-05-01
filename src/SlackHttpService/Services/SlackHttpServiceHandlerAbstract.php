@@ -1,8 +1,9 @@
 <?php
 
-namespace SlackHttpService;
+namespace SlackHttpService\Services;
 
 use Psr\Http\Message\ResponseInterface;
+use SlackHttpService\SlackHttpService;
 
 /**
  * Most of the api have shared logic. This class will share it.

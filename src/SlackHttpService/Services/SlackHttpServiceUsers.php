@@ -1,6 +1,6 @@
 <?php
 
-namespace SlackHttpService;
+namespace SlackHttpService\Services;
 
 /**
  * Handle the users part of the rest api with slack.
