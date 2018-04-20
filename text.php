@@ -4,4 +4,4 @@ require_once 'vendor/autoload.php';
 
 $db = \Nuntius\Nuntius::getDb();
 
-$db->getOperations()->dbCreate('nuntius');
+$db->getOperations()->dbDrop('foo');

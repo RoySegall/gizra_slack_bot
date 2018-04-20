@@ -31,11 +31,17 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
   protected $mongo;
 
   /**
+   * @var \MongoDB\Client
+   */
+  protected $client;
+
+  /**
    * Constructing.
    */
   function __construct() {
     $this->db = Nuntius::getSettings()->getSetting('mongodb')['db'];
     $this->mongo = Nuntius::getMongoDB()->getConnection();
+    $this->client = Nuntius::getMongoDB()->getClient();
 
     try  {
       $this->mongo->listCollections();
@@ -62,7 +68,8 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function dbCreate($db) {
-    $this->mongo->getConnection()->{$db};
+    // Create a collection in non existing db in order to create the DB.
+    $this->client->{$db}->createCollection('_placeholder');
     return $this;
   }
 
@@ -70,6 +77,11 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function dbDrop($db) {
+    // Dropping all the tables in order to drop the table.
+    foreach ($this->client->{$db}->listCollections() as $collection) {
+      $this->client->{$db}->dropCollection($collection->getName());
+    }
+
     return $this;
   }
 

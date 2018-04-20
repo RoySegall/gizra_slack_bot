@@ -28,6 +28,11 @@ class NuntiusMongoDB {
   public $error;
 
   /**
+   * @var Client
+   */
+  protected $client;
+
+  /**
    * NuntiusRethinkdb constructor.
    *
    * @param NuntiusConfig $config
@@ -35,10 +40,17 @@ class NuntiusMongoDB {
    */
   function __construct(NuntiusConfig $config) {
     $info = $config->getSetting('mongodb');
+    $this->client = new Client($info['uri']);
 
-    $collection = new Client($info['uri']);
-
+    $collection = $this->client;
     $this->connection = $collection->{$info['db']};
+  }
+
+  /**
+   * @return Client
+   */
+  public function getClient() {
+    return $this->client;
   }
 
   /**
