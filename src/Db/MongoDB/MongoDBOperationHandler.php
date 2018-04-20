@@ -2,6 +2,7 @@
 
 namespace Nuntius\Db\MongoDB;
 
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use Nuntius\Db\DbOperationHandlerInterface;
 use Nuntius\Nuntius;
 
@@ -9,13 +10,6 @@ use Nuntius\Nuntius;
  * MongoDB operation handler.
  */
 class MongoDBOperationHandler implements DbOperationHandlerInterface {
-
-  /**
-   * The rethinkDB service.
-   *
-   * @var \Nuntius\NuntiusRethinkdb
-   */
-  protected $rethinkDB;
 
   /**
    * The connection object.
@@ -32,10 +26,23 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
   protected $db;
 
   /**
+   * @var \Nuntius\NuntiusMongoDB
+   */
+  protected $mongo;
+
+  /**
    * Constructing.
    */
   function __construct() {
     $this->db = Nuntius::getSettings()->getSetting('mongodb')['db'];
+    $this->mongo = Nuntius::getMongoDB()->getConnection();
+
+    try  {
+      $this->mongo->listCollections();
+      $this->connection = TRUE;
+    } catch (ConnectionTimeoutException $e) {
+      $this->connection = FALSE;
+    }
   }
 
   /**
@@ -55,6 +62,7 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function dbCreate($db) {
+    $this->mongo->getConnection()->{$db};
     return $this;
   }
 
