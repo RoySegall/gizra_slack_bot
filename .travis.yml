@@ -8,6 +8,9 @@ php:
 addons:
   rethinkdb: "2.3"
 
+services:
+  - mongodb
+
 cache:
   directories:
     - /home/travis/build/RoySegall/nuntius-bot/vendor
