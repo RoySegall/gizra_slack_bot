@@ -41,6 +41,7 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     // Set the default just in case.
+    var_dump($driver);
     Nuntius::getDb()->setDriver($driver);
   }
 
@@ -53,6 +54,11 @@ class DbDispatcherTest extends TestsAbstract {
         'dbType' => 'NoSQL',
         'installerDescription' => 'No SQL light weight DB with real time support.',
         'supportRealTime' => TRUE,
+      ],
+      'mongodb' => [
+        'dbType' => 'NoSQL',
+        'installerDescription' => 'No SQL light weight DB',
+        'supportRealTime' => FALSE,
       ],
     ];
 
@@ -131,8 +137,6 @@ class DbDispatcherTest extends TestsAbstract {
    */
   public function testOperation() {
     $db = Nuntius::getDb();
-
-    $db->setDriver('rethinkdb');
 
     // Testing DB related operations.
     $operations = $db->getOperations();
