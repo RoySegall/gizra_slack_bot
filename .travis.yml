@@ -19,8 +19,8 @@ before_script:
   - wget http://pecl.php.net/get/mongodb-1.4.3.tgz
   - tar -xzf mongodb-1.4.3.tgz
   - sh -c "cd mongodb-1.4.3 && phpize && ./configure && make install"
-  - ls -al
-  - echo "extension=/home/travis/build/RoySegall/nuntius-bot/mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  - ls -al mongodb-1.4.3
+  - echo "extension=/home/travis/build/RoySegall/nuntius-bot/mongodb-1.4.3/mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
   # Installing composer
   - curl -sS https://getcomposer.org/installer | php
