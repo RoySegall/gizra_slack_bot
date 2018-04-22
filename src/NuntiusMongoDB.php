@@ -43,7 +43,7 @@ class NuntiusMongoDB {
     $this->client = new Client($info['uri']);
 
     $collection = $this->client;
-    $this->connection = $collection->{$info['db']};
+    $this->connection = $collection->selectDatabase($info['db']);
   }
 
   /**

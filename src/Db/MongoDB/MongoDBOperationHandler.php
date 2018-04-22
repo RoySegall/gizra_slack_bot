@@ -89,6 +89,14 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function dbList() {
+    $dbs = $this->client->listDatabases();
+    $list = [];
+
+    foreach ($dbs as $db) {
+      $list[] = $db->getName();
+    }
+
+    return $list;
   }
 
   /**
@@ -102,6 +110,7 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function tableCreate($table) {
+    $this->mongo->createCollection($table);
     return $this;
   }
 
@@ -109,6 +118,7 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function tableDrop($table) {
+    $this->mongo->dropCollection($table);
     return $this;
   }
 
@@ -116,7 +126,13 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function tableList() {
-    return [];
+    $tables = [];
+
+    foreach ($this->mongo->listCollections() as $collection) {
+      $tables[] = $collection->getName();
+    }
+
+    return $tables;
   }
 
   /**
@@ -130,6 +146,7 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function indexCreate($table, $column) {
+    $this->mongo->selectCollection($table)->createIndex($column);
     return $this;
   }
 
@@ -137,6 +154,7 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function indexDrop($table, $column) {
+    $this->mongo->selectCollection($table)->dropIndex($column);
     return $this;
   }
 
@@ -144,7 +162,13 @@ class MongoDBOperationHandler implements DbOperationHandlerInterface {
    * {@inheritdoc}
    */
   public function indexList($table) {
-    return [];
+    $indexes = [];
+
+    foreach ($this->mongo->selectCollection($table)->listIndexes() as $index) {
+      $indexes[] = $index->getName();
+    }
+
+    return $indexes;
   }
 
   /**
