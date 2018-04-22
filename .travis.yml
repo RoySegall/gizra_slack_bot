@@ -18,7 +18,7 @@ before_script:
   # source: https://gist.github.com/gyndav/2351174.
   - wget http://pecl.php.net/get/mongodb-1.4.3.tgz
   - tar -xzf mongodb-1.4.3.tgz
-  - sh -c "cd mongodb-1.4.3.tgz && phpize && ./configure && sudo make install"
+  - sh -c "cd mongodb-1.4.3 && phpize && ./configure && make install"
   - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
   # Installing composer
