@@ -11,6 +11,11 @@ addons:
 services:
   - mongodb
 
+matrix:
+  driver:
+    - rethinkdb
+    - mongodb
+
 cache:
   directories:
     - /home/travis/build/RoySegall/nuntius-bot/vendor
