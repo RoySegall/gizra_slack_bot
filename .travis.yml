@@ -14,6 +14,14 @@ cache:
     - /home/travis/build/RoySegall/nuntius-bot/vendor
 
 before_script:
+
+  # Install MongoDB for PHP.
+  # source: https://gist.github.com/gyndav/2351174.
+  - wget http://pecl.php.net/get/mongo-1.2.10.tgz
+  - tar -xzf mongo-1.2.10.tgz
+  - sh -c "cd mongo-1.2.10 && phpize && ./configure && sudo make install"
+  - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
   # Installing composer
   - curl -sS https://getcomposer.org/installer | php
   - php composer.phar install --dev
