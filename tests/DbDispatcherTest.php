@@ -95,7 +95,6 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     // Start querying the DB.
-
     $db->setDriver('rethinkdb');
 
     $this->queryingTesting($db->getQuery());

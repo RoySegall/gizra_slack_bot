@@ -11,8 +11,8 @@ addons:
 services:
   - mongodb
 
-matrix:
-  driver:
+env:
+  matrix:
     - rethinkdb
     - mongodb
 
