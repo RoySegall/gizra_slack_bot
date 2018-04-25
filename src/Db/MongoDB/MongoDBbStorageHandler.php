@@ -3,6 +3,7 @@
 namespace Nuntius\Db\MongoDB;
 
 use Nuntius\Db\DbStorageHandlerInterface;
+use Nuntius\Nuntius;
 
 /**
  * MongoDB storage handler.
@@ -17,16 +18,15 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
   protected $table;
 
   /**
-   * The connection object.
-   *
-   * @var \r\Connection
+   * @var \MongoDB\Database
    */
-  protected $connection;
+  protected $mongo;
 
   /**
    * Constructing.
    */
   function __construct() {
+    $this->mongo = Nuntius::getMongoDB()->getConnection();
   }
 
   /**
@@ -41,6 +41,9 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function save($document) {
+    $result = $this->mongo->selectCollection($this->table)->insertOne($document);
+    $id = $result->getInsertedId();
+    $document['id'] = $id->__toString();
     return $document;
   }
 
@@ -48,7 +51,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function load($id) {
-    $items = [];
+    $items = $this->loadMultiple([$id]);
 
     return reset($items);
   }
@@ -57,6 +60,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function loadMultiple(array $ids = []) {
+    $this->
     return [];
   }
 
