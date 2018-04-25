@@ -1,7 +1,6 @@
 <?php
 
 namespace tests;
-use Nuntius\Db\DbOperationHandlerInterface;
 use Nuntius\Db\DbQueryHandlerInterface;
 use Nuntius\Db\MongoDB\MongoDBOperationHandler;
 use Nuntius\Db\RethinkDB\RethinkDbOperationHandler;
@@ -44,7 +43,6 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     // Set the default just in case.
-    var_dump($driver);
     Nuntius::getDb()->setDriver($driver);
   }
 

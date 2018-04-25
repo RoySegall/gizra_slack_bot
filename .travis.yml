@@ -41,6 +41,6 @@ before_script:
 script:
   - cp settings/credentials.local.travis.yml settings/credentials.local.yml
   - cp settings/hooks.local.travis.yml settings/hooks.local.yml
-  - echo "db_driver: '$DRIVER'" >> settings/credentials.local.travis.yml
+  - bash set_travis_driver.sh $DRIVER
   - php console.php nuntius:install
   - vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php tests/
