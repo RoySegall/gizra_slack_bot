@@ -2,6 +2,7 @@
 
 namespace Nuntius\Db\MongoDB;
 
+use MongoDB\Model\BSONDocument;
 use Nuntius\Db\DbStorageHandlerInterface;
 use Nuntius\Nuntius;
 
@@ -60,8 +61,34 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function loadMultiple(array $ids = []) {
-    $this->
-    return [];
+    $query = $this->mongo->selectCollection($this->table);
+
+    $filter = [];
+
+    if ($ids) {
+      $filter['_id'] = ['$in' => array_map(function($id) {
+        return new \MongoDB\BSON\ObjectId($id);
+      }, $ids)];
+    }
+
+    /** @var BSONDocument[] $cursor */
+    $cursor = $query->find($filter);
+
+    $results = [];
+    foreach ($cursor as $doc) {
+
+      // Get the item.
+      $item = $doc->getArrayCopy();
+
+      // Order the object.
+      $item['id'] = $item['_id']->__toString();
+      unset($item['_id']);
+
+      // Add to list.
+      $results[] = $item;
+    }
+
+    return $results;
   }
 
   /**
