@@ -39,8 +39,8 @@ before_script:
   - export NUNTIUS_BASE_URL=http://localhost:8888
 
 script:
+  - bash set_travis_driver.sh $DRIVER
   - cp settings/credentials.local.travis.yml settings/credentials.local.yml
   - cp settings/hooks.local.travis.yml settings/hooks.local.yml
-  - bash set_travis_driver.sh $DRIVER
   - php console.php nuntius:install
   - vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php tests/
