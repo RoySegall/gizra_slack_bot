@@ -1,7 +1,10 @@
 <?php
 
 namespace tests;
+use Nuntius\Db\DbOperationHandlerInterface;
 use Nuntius\Db\DbQueryHandlerInterface;
+use Nuntius\Db\MongoDB\MongoDBOperationHandler;
+use Nuntius\Db\RethinkDB\RethinkDbOperationHandler;
 use Nuntius\Nuntius;
 
 /**
@@ -76,7 +79,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing the query controller.
    */
-  public function testQuery() {
+  public function _testQuery() {
     // Create a list of entries.
     $objects = [
       ['name' => 'Tony', 'age' => 27, 'alterego' => 'Iron Man'],
@@ -87,7 +90,9 @@ class DbDispatcherTest extends TestsAbstract {
     $db = Nuntius::getDb();
 
     // Create a random table.
-    $db->getOperations()->tableCreate('superheroes');
+    if (!$db->getOperations()->tableExists('superheroes')) {
+      $db->getOperations()->tableCreate('superheroes');
+    }
 
     // Create the objects.
     foreach ($objects as $object) {
@@ -95,8 +100,6 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     // Start querying the DB.
-    $db->setDriver('rethinkdb');
-
     $this->queryingTesting($db->getQuery());
 
     // Delete the table.
@@ -150,8 +153,32 @@ class DbDispatcherTest extends TestsAbstract {
     $operations->tableDrop('testing_table');
     $this->assertFalse($operations->tableExists('testing_table'));
 
-    // Testing index related operations.
     $operations->tableCreate('testing_table');
+    $func_name = 'indexTestingDb' . $db->getDriver();
+    $this->{$func_name}($operations);
+  }
+
+  /**
+   * Helping method for testing operation for MongoDB.
+   *
+   * @param MongoDBOperationHandler $operations
+   *   The MongoDB operation handler.
+   */
+  protected function indexTestingDbmongodb(MongoDBOperationHandler $operations) {
+    $operations->indexCreate('testing_table', ['index' => 1]);
+    $this->assertTrue($operations->indexExists('testing_table', 'index_1'));
+    $operations->indexDrop('testing_table', 'index_1');
+    $this->assertFalse($operations->indexExists('testing_table', 'index_1'));
+    $operations->tableDrop('testing_table');
+  }
+
+  /**
+   * Helping method for testing operation for RethinkDB.
+   *
+   * @param RethinkDbOperationHandler $operations
+   *   The RethinkDB operation handler.
+   */
+  protected function indexTestingDbrethinkdb(RethinkDbOperationHandler $operations) {
     $operations->indexCreate('testing_table', 'index');
     $this->assertTrue($operations->indexExists('testing_table', 'index'));
     $operations->indexDrop('testing_table', 'index');
