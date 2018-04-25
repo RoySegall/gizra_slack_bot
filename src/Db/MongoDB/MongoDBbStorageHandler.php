@@ -66,9 +66,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
     $filter = [];
 
     if ($ids) {
-      $filter['_id'] = ['$in' => array_map(function($id) {
-        return new \MongoDB\BSON\ObjectId($id);
-      }, $ids)];
+      $filter['_id'] = ['$in' => $this->processIdsToFilter($ids)];
     }
 
     /** @var BSONDocument[] $cursor */
@@ -95,6 +93,10 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function update($document) {
+    $this->mongo->selectCollection($this->table)->updateOne(
+      ['_id' => new \MongoDB\BSON\ObjectId($document['id'])],
+      ['$set' => $document]
+    );
     return $document;
   }
 
@@ -109,6 +111,27 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function deleteMultiple(array $ids = []) {
+    $this->mongo
+      ->selectCollection($this->table)
+      ->deleteMany(['_id' => [
+        '$in' => $this->processIdsToFilter($ids)
+        ]
+      ]);
+  }
+
+  /**
+   * Process a list of ids to a filterable list of ids.
+   *
+   * @param $ids
+   *   The list of IDs.
+   *
+   * @return array
+   *   Return a list of IDs which can be passed to the filter array.
+   */
+  protected function processIdsToFilter($ids) {
+    return array_map(function($id) {
+      return new \MongoDB\BSON\ObjectId($id);
+    }, $ids);
   }
 
 }

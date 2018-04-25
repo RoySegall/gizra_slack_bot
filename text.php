@@ -16,5 +16,3 @@ $db = \Nuntius\Nuntius::getDb();
 //];
 
 
-$item = $db->getStorage()->table('superheroes')->load('5ae0cc7bf3dd2b8bad1f71e2');
-\Kint::dump($item);
