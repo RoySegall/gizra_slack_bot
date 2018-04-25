@@ -12,7 +12,7 @@ services:
   - mongodb
 
 env:
-  matrix:
+  db_driver:
     - rethinkdb
     - mongodb
 
@@ -21,6 +21,8 @@ cache:
     - /home/travis/build/RoySegall/nuntius-bot/vendor
 
 before_script:
+
+  - echo $db_driver
 
   # Install MongoDB for PHP.
   # source: https://gist.github.com/gyndav/2351174.
