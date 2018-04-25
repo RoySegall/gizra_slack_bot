@@ -31,7 +31,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing what happens with un un valid diver.
    */
-  public function testUnValidDriver() {
+  public function _testUnValidDriver() {
     $driver = Nuntius::getSettings()->getSetting('db_driver');
     // Save that for later.
     try {
@@ -49,7 +49,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing the metadata controller.
    */
-  public function testMetadata() {
+  public function _testMetadata() {
     $dbs = [
       'rethinkdb' => [
         'dbType' => 'NoSQL',
@@ -135,7 +135,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing the operation on the DB.
    */
-  public function testOperation() {
+  public function _testOperation() {
     $db = Nuntius::getDb();
 
     // Testing DB related operations.
@@ -182,6 +182,41 @@ class DbDispatcherTest extends TestsAbstract {
     $operations->indexDrop('testing_table', 'index');
     $this->assertFalse($operations->indexExists('testing_table', 'index'));
     $operations->tableDrop('testing_table');
+  }
+
+  /**
+   * Testing storage handlers.
+   */
+  public function testStorage() {
+    // Create a list of entries.
+    $objects = [
+      ['name' => 'Tony', 'age' => 27, 'alterego' => 'Iron Man'],
+      ['name' => 'Peter', 'age' => 20, 'alterego' => 'SpiderMan'],
+      ['name' => 'Steve', 'age' => 18, 'alterego' => 'Captain America'],
+    ];
+
+    $db = Nuntius::getDb();
+
+    // Create a random table.
+    if (!$db->getOperations()->tableExists('superheroes')) {
+      $db->getOperations()->tableCreate('superheroes');
+    }
+
+    $new_objects = [];
+    foreach ($objects as $object) {
+      $new_objects[] = $db->getStorage()->table('superheroes')->save($object);
+    }
+
+    // Verify the objects have ids.
+    foreach ($new_objects as $new_object) {
+      $this->assertArrayHasKey('id', $new_object);
+      $this->assertArrayNotHasKey('id', $new_objects);
+    }
+
+    if (!$db->getOperations()->tableExists('superheroes')) {
+      $db->getOperations()->tableDrop('superheroes');
+    }
+
   }
 
 }
