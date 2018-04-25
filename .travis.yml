@@ -12,9 +12,9 @@ services:
   - mongodb
 
 env:
-  db_driver:
-    - rethinkdb
-    - mongodb
+  matrix:
+    - DRIVER=rethinkdb
+    - DRIVER=mongodb
 
 cache:
   directories:
@@ -22,8 +22,7 @@ cache:
 
 before_script:
 
-  - echo $db_driver
-
+  - echo $DRIVER
   # Install MongoDB for PHP.
   # source: https://gist.github.com/gyndav/2351174.
   - wget http://pecl.php.net/get/mongodb-1.4.3.tgz
