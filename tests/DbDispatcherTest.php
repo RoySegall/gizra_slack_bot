@@ -213,6 +213,20 @@ class DbDispatcherTest extends TestsAbstract {
       $this->assertArrayNotHasKey('id', $new_objects);
     }
 
+    // Verify we can load.
+    $object = $db->getStorage()->table('superheroes')->load($new_objects[0]['id']);
+    $this->assertEquals($object['name'], 'Tony');
+
+    // Verify we can update.
+    $object['name'] = 'Clark';
+    $db->getStorage()->table('superheroes')->update($object);
+    $object = $db->getStorage()->table('superheroes')->load($new_objects[0]['id']);
+    $this->assertEquals($object['name'], 'Clark');
+
+    // Verify we can delete.
+    $db->getStorage()->table('superheroes')->delete($object[0]['id']);
+    // todo...
+
     if (!$db->getOperations()->tableExists('superheroes')) {
       $db->getOperations()->tableDrop('superheroes');
     }
