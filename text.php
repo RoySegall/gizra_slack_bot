@@ -15,4 +15,6 @@ $db = \Nuntius\Nuntius::getDb();
 //  ['name' => 'Steve', 'age' => 18, 'alterego' => 'Captain America'],
 //];
 
+$db->getOperations()->tableCreate('superheroes');
+$db->getOperations()->tableDrop('superheroes');
 

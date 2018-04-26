@@ -76,58 +76,15 @@ class DbDispatcherTest extends TestsAbstract {
   }
 
   /**
-   * Testing storage handlers.
-   */
-  public function testStorage() {
-    list($db, $new_objects) = $this->generateObjects();
-
-    // Verify the objects have ids.
-    foreach ($new_objects as $new_object) {
-      $this->assertArrayHasKey('id', $new_object);
-      $this->assertArrayNotHasKey('id', $new_objects);
-    }
-
-    // Set up some stuff.
-    $id = $new_objects[0]['id'];
-
-    $getTable = function() use($db) {
-      return $db->getStorage()->table('superheroes');
-    };
-
-    // Verify we can load.
-    $object = $getTable()->load($id);
-    $this->assertEquals($object['name'], 'Tony');
-
-    // Verify we can update.
-    $object['name'] = 'Clark';
-    $getTable()->update($object);
-    $object = $getTable()->load($id);
-    $this->assertEquals($object['name'], 'Clark');
-
-    // Verify we can delete.
-    $getTable()->delete($id);
-    $this->assertFalse($getTable()->load($id));
-
-    if (!$db->getOperations()->tableExists('superheroes')) {
-      $db->getOperations()->tableDrop('superheroes');
-    }
-  }
-
-  /**
    * Testing the query controller.
    */
   public function testQuery() {
 
-    list($db, $objects) = $this->generateObjects();
+    list($db) = $this->generateObjects();
 
     // Create a random table.
     if (!$db->getOperations()->tableExists('superheroes')) {
       $db->getOperations()->tableCreate('superheroes');
-    }
-
-    // Create the objects.
-    foreach ($objects as $object) {
-      $db->getStorage()->table('superheroes')->save($object);
     }
 
     // Start querying the DB.
@@ -241,6 +198,42 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     return [$db, $new_objects];
+  }
+
+  /**
+   * Testing storage handlers.
+   */
+  public function testStorage() {
+    list($db, $new_objects) = $this->generateObjects();
+
+    // Verify the objects have ids.
+    foreach ($new_objects as $new_object) {
+      $this->assertArrayHasKey('id', $new_object);
+      $this->assertArrayNotHasKey('id', $new_objects);
+    }
+
+    // Set up some stuff.
+    $id = $new_objects[0]['id'];
+
+    $getTable = function() use($db) {
+      return $db->getStorage()->table('superheroes');
+    };
+
+    // Verify we can load.
+    $object = $getTable()->load($id);
+    $this->assertEquals($object['name'], 'Tony');
+
+    // Verify we can update.
+    $object['name'] = 'Clark';
+    $getTable()->update($object);
+    $object = $getTable()->load($id);
+    $this->assertEquals($object['name'], 'Clark');
+
+    // Verify we can delete.
+    $getTable()->delete($id);
+    $this->assertFalse($getTable()->load($id));
+
+    $db->getOperations()->tableDrop('superheroes');
   }
 
 }

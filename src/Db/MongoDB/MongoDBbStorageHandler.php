@@ -66,15 +66,15 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
     $filter = [];
 
     if ($ids) {
-      $filter['_id'] = ['$in' => $this->processIdsToFilter($ids)];
+      $filter['_id'] = ['$in' => self::processIdsToFilter($ids)];
     }
 
     /** @var BSONDocument[] $cursor */
     $cursor = $query->find($filter);
 
     $results = [];
-    foreach ($cursor as $doc) {
 
+    foreach ($cursor as $doc) {
       // Get the item.
       $item = $doc->getArrayCopy();
 
@@ -128,7 +128,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * @return array
    *   Return a list of IDs which can be passed to the filter array.
    */
-  protected function processIdsToFilter($ids) {
+  public static function processIdsToFilter($ids) {
     return array_map(function($id) {
       return new \MongoDB\BSON\ObjectId($id);
     }, $ids);

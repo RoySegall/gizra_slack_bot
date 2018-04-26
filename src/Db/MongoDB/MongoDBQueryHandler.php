@@ -2,7 +2,10 @@
 
 namespace Nuntius\Db\MongoDB;
 
+use MongoDB\BSON\ObjectId;
+use MongoDB\Model\BSONDocument;
 use Nuntius\Db\DbQueryHandlerInterface;
+use Nuntius\Nuntius;
 
 /**
  * MongoDB query handler.
@@ -38,32 +41,32 @@ class MongoDBQueryHandler implements DbQueryHandlerInterface {
   protected $sort = [];
 
   /**
-   * A flag which determine if the query need to in readl time or not.
-   *
-   * @var bool
-   */
-  protected $changes = FALSE;
-
-  /**
    * @var array
    *
    * Keep the allowed operators on the query.
    */
   protected $operators = [
-    '=' => 'eq',
-    '!=' => 'ne',
-    '>' => 'gt',
-    '>=' => 'ge',
-    '<' => 'lt',
-    '<=' => 'le',
-    'CONTAINS' => 'match',
-    'IN' => 'args',
+    '=' => '$eq',
+    '!=' => '$ne',
+    '>' => '$gt',
+    '>=' => '$gte',
+    '<' => '$lt',
+    '<=' => '$lte',
+    'CONTAINS' => '$regex',
+    'IN' => '$in',
+    'NOT_IN' => '$nin'
   ];
 
   /**
-   * Constructing the query.
+   * @var \MongoDB\Database
+   */
+  protected $mongo;
+
+  /**
+   * Constructing.
    */
   function __construct() {
+    $this->mongo = Nuntius::getMongoDB()->getConnection();
   }
 
   /**
@@ -79,12 +82,30 @@ class MongoDBQueryHandler implements DbQueryHandlerInterface {
    * {@inheritdoc}
    */
   public function condition($property, $value, $operator = '=') {
-    $this->conditions[] = [
-      'property' => $property,
-      'value' => $value,
-      'operator' => $operator,
-    ];
 
+    // Minor adjustment for MongoDB.
+    if ($property == 'id') {
+      $property = '_id';
+
+      if (is_array($value)) {
+        $value = MongoDBbStorageHandler::processIdsToFilter($value);
+      }
+      else {
+        $value = new ObjectId($value);
+      }
+    }
+
+    if ($operator == 'CONTAINS') {
+      $searchValue = [$this->operators[$operator] => ".*{$value}.*"];
+    }
+    elseif (in_array($operator, ['IN', 'NOT_IN'])) {
+      $searchValue = [$this->operators[$operator] => $value];
+    }
+    else {
+      $searchValue = [$this->operators[$operator] => $value];
+    }
+
+    $this->conditions[$property] = $searchValue;
     return $this;
   }
 
@@ -117,30 +138,43 @@ class MongoDBQueryHandler implements DbQueryHandlerInterface {
    * @param bool $mode
    *   The mode of the flag.
    *
-   * @return MongoDBQueryHandler
-   *   The current instance.
+   * @throws \Exception
    */
   public function setChanges($mode = TRUE) {
-    throw new \Exception('The DB does not support real time.');
+    throw new \Exception('MongoDB does not support real time feed.');
   }
 
   /**
    * Return the changes flag.
    *
-   * @return bool
+   * @throws \Exception
    */
   public function getChanges() {
-    throw new \Exception('The DB does not support real time.');
+    throw new \Exception('MongoDB does not support real time feed.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute() {
+    /** @var BSONDocument[] $cursor */
+    $cursor = $this->mongo->selectCollection($this->table)->find($this->conditions);
     $items = [];
 
-    $this->cleanUp();
+    foreach ($cursor as $doc) {
+      // Get the item.
+      $item = $doc->getArrayCopy();
 
+      // Order the object.
+      $item['id'] = $item['_id']->__toString();
+      unset($item['_id']);
+
+      // Add to list.
+      $items[] = $item;
+    }
+
+    // Clean up the conditions.
+    $this->cleanUp();
     return $items;
   }
 
