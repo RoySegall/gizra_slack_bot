@@ -32,7 +32,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing what happens with un un valid diver.
    */
-  public function _testUnValidDriver() {
+  public function testUnValidDriver() {
     $driver = Nuntius::getSettings()->getSetting('db_driver');
     // Save that for later.
     try {
@@ -50,7 +50,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing the metadata controller.
    */
-  public function _testMetadata() {
+  public function testMetadata() {
     $dbs = [
       'rethinkdb' => [
         'dbType' => 'NoSQL',
@@ -76,17 +76,49 @@ class DbDispatcherTest extends TestsAbstract {
   }
 
   /**
+   * Testing storage handlers.
+   */
+  public function testStorage() {
+    list($db, $new_objects) = $this->generateObjects();
+
+    // Verify the objects have ids.
+    foreach ($new_objects as $new_object) {
+      $this->assertArrayHasKey('id', $new_object);
+      $this->assertArrayNotHasKey('id', $new_objects);
+    }
+
+    // Set up some stuff.
+    $id = $new_objects[0]['id'];
+
+    $getTable = function() use($db) {
+      return $db->getStorage()->table('superheroes');
+    };
+
+    // Verify we can load.
+    $object = $getTable()->load($id);
+    $this->assertEquals($object['name'], 'Tony');
+
+    // Verify we can update.
+    $object['name'] = 'Clark';
+    $getTable()->update($object);
+    $object = $getTable()->load($id);
+    $this->assertEquals($object['name'], 'Clark');
+
+    // Verify we can delete.
+    $getTable()->delete($id);
+    $this->assertFalse($getTable()->load($id));
+
+    if (!$db->getOperations()->tableExists('superheroes')) {
+      $db->getOperations()->tableDrop('superheroes');
+    }
+  }
+
+  /**
    * Testing the query controller.
    */
-  public function _testQuery() {
-    // Create a list of entries.
-    $objects = [
-      ['name' => 'Tony', 'age' => 27, 'alterego' => 'Iron Man'],
-      ['name' => 'Peter', 'age' => 20, 'alterego' => 'SpiderMan'],
-      ['name' => 'Steve', 'age' => 18, 'alterego' => 'Captain America'],
-    ];
+  public function testQuery() {
 
-    $db = Nuntius::getDb();
+    list($db, $objects) = $this->generateObjects();
 
     // Create a random table.
     if (!$db->getOperations()->tableExists('superheroes')) {
@@ -136,7 +168,7 @@ class DbDispatcherTest extends TestsAbstract {
   /**
    * Testing the operation on the DB.
    */
-  public function _testOperation() {
+  public function testOperation() {
     $db = Nuntius::getDb();
 
     // Testing DB related operations.
@@ -186,10 +218,9 @@ class DbDispatcherTest extends TestsAbstract {
   }
 
   /**
-   * Testing storage handlers.
+   * @return array
    */
-  public function testStorage() {
-    // Create a list of entries.
+  protected function generateObjects() {
     $objects = [
       ['name' => 'Tony', 'age' => 27, 'alterego' => 'Iron Man'],
       ['name' => 'Peter', 'age' => 20, 'alterego' => 'SpiderMan'],
@@ -204,41 +235,12 @@ class DbDispatcherTest extends TestsAbstract {
     }
 
     $new_objects = [];
+
     foreach ($objects as $object) {
       $new_objects[] = $db->getStorage()->table('superheroes')->save($object);
     }
 
-    // Verify the objects have ids.
-    foreach ($new_objects as $new_object) {
-      $this->assertArrayHasKey('id', $new_object);
-      $this->assertArrayNotHasKey('id', $new_objects);
-    }
-
-    // Set up some stuff.
-    $id = $new_objects[0]['id'];
-
-    $getTable = function() use($db) {
-      return $db->getStorage()->table('superheroes');
-    };
-
-    // Verify we can load.
-    $object = $getTable()->load($id);
-    $this->assertEquals($object['name'], 'Tony');
-
-    // Verify we can update.
-    $object['name'] = 'Clark';
-    $getTable()->update($object);
-    $object = $getTable()->load($id);
-    $this->assertEquals($object['name'], 'Clark');
-
-    // Verify we can delete.
-    $getTable()->delete($id);
-    $this->assertFalse($getTable()->load($id));
-
-    if (!$db->getOperations()->tableExists('superheroes')) {
-      $db->getOperations()->tableDrop('superheroes');
-    }
-
+    return [$db, $new_objects];
   }
 
 }
