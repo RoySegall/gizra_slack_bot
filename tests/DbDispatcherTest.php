@@ -1,6 +1,7 @@
 <?php
 
 namespace tests;
+
 use Nuntius\Db\DbQueryHandlerInterface;
 use Nuntius\Db\MongoDB\MongoDBOperationHandler;
 use Nuntius\Db\RethinkDB\RethinkDbOperationHandler;
@@ -213,19 +214,26 @@ class DbDispatcherTest extends TestsAbstract {
       $this->assertArrayNotHasKey('id', $new_objects);
     }
 
+    // Set up some stuff.
+    $id = $new_objects[0]['id'];
+
+    $getTable = function() use($db) {
+      return $db->getStorage()->table('superheroes');
+    };
+
     // Verify we can load.
-    $object = $db->getStorage()->table('superheroes')->load($new_objects[0]['id']);
+    $object = $getTable()->load($id);
     $this->assertEquals($object['name'], 'Tony');
 
     // Verify we can update.
     $object['name'] = 'Clark';
-    $db->getStorage()->table('superheroes')->update($object);
-    $object = $db->getStorage()->table('superheroes')->load($new_objects[0]['id']);
+    $getTable()->update($object);
+    $object = $getTable()->load($id);
     $this->assertEquals($object['name'], 'Clark');
 
     // Verify we can delete.
-    $db->getStorage()->table('superheroes')->delete($object[0]['id']);
-    // todo...
+    $getTable()->delete($id);
+    $this->assertFalse($getTable()->load($id));
 
     if (!$db->getOperations()->tableExists('superheroes')) {
       $db->getOperations()->tableDrop('superheroes');
