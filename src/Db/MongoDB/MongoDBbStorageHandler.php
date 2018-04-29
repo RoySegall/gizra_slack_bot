@@ -42,9 +42,16 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function save($document) {
+
+    if (!isset($document['time'])) {
+      $document['time'] = time();
+    }
+
     $result = $this->mongo->selectCollection($this->table)->insertOne($document);
+
     $id = $result->getInsertedId();
     $document['id'] = $id->__toString();
+
     return $document;
   }
 
