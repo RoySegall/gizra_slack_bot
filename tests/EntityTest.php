@@ -54,6 +54,8 @@ class EntityTest extends TestsAbstract {
       ->execute();
 
     $array_copy = reset($result);
+    \Kint::dump($array_copy);
+    \Kint::dump($entity_type);
     $this->assertEquals($object['id'], $array_copy['id']);
     $this->assertArrayHasKey('time', $array_copy);
 
