@@ -137,6 +137,12 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    */
   public static function processIdsToFilter($ids) {
     return array_map(function($id) {
+      if (!ctype_xdigit($id)) {
+        // If the current ID is not a hexadecimal string then we need to make it
+        // as a hexadecimal string. Creating an md5 object and trim it to 24
+        // chars should fix it.
+        $id = substr(md5($id), 0, 24);
+      }
       return new \MongoDB\BSON\ObjectId($id);
     }, $ids);
   }
