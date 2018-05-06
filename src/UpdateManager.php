@@ -139,7 +139,7 @@ class UpdateManager {
     $updates = $this->entityManager->get('system')->load('updates');
 
     if (empty($updates->processed)) {
-      $updates->processed = [];
+      @$updates->processed = [];
     }
 
     $processed = $updates->processed;

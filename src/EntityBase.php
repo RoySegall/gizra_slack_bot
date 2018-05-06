@@ -58,7 +58,7 @@ abstract class EntityBase implements EntityBaseInterface {
    * {@inheritdoc}
    */
   public function loadMultiple(array $ids = []) {
-    $results = [new \stdClass()];
+    $results = [];
 
     foreach ($this->storage->loadMultiple($ids) as $result) {
       $results[$result['id']] = $this->createInstance($result);

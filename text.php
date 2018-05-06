@@ -19,7 +19,15 @@ $db = \Nuntius\Nuntius::getDb();
 //$db->getOperations()->tableDrop('superheroes');
 
 //$id = '5ae5f2d2f3dd2b68fc5929a2';
-$id = substr(md5('foo'), 0, 24);
-\Kint::dump(($id));
-\Kint::dump(new \MongoDB\BSON\ObjectId($id));
+$entityManager = \Nuntius\Nuntius::getEntityManager();
 
+$updates = $entityManager->get('system')->load('updates');
+
+
+if (empty($updates->processed)) {
+  $updates->processed = [];
+}
+
+$processed = $updates->processed;
+$processed[] = 'f';
+$entityManager->get('system')->update(['id' => 'updates', 'processed' => []]);

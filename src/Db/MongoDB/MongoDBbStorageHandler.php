@@ -61,7 +61,6 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
   public function load($id) {
     $items = $this->loadMultiple([$id]);
 
-    \Kint::dump($items);
     return reset($items);
   }
 
