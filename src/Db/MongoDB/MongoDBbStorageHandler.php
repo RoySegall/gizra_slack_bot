@@ -73,7 +73,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
     $filter = [];
 
     if ($ids) {
-      $filter['_id'] = ['$in' => self::processIdsToFilter($ids)];
+      $filter['id'] = ['$in' => $ids];
     }
 
     /** @var BSONDocument[] $cursor */
@@ -101,9 +101,10 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    */
   public function update($document) {
     $this->mongo->selectCollection($this->table)->updateOne(
-      ['_id' => new \MongoDB\BSON\ObjectId(self::prepareId($document['id']))],
+      ['id' => $document['id']],
       ['$set' => $document]
     );
+
     return $document;
   }
 
@@ -120,35 +121,35 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
   public function deleteMultiple(array $ids = []) {
     $this->mongo
       ->selectCollection($this->table)
-      ->deleteMany(['_id' => [
-        '$in' => $this->processIdsToFilter($ids)
+      ->deleteMany(['id' => [
+        '$in' => $ids,
         ]
       ]);
   }
 
-  /**
-   * Process a list of ids to a filterable list of ids.
-   *
-   * @param $ids
-   *   The list of IDs.
-   *
-   * @return array
-   *   Return a list of IDs which can be passed to the filter array.
-   */
-  public static function processIdsToFilter($ids) {
-    return array_map(function($id) {
-      return new \MongoDB\BSON\ObjectId(self::prepareId($id));
-    }, $ids);
-  }
+//  /**
+//   * Process a list of ids to a filterable list of ids.
+//   *
+//   * @param $ids
+//   *   The list of IDs.
+//   *
+//   * @return array
+//   *   Return a list of IDs which can be passed to the filter array.
+//   */
+//  public static function processIdsToFilter($ids) {
+//    return array_map(function($id) {
+//      return new \MongoDB\BSON\ObjectId(self::prepareId($id));
+//    }, $ids);
+//  }
 
-  public static function prepareId($id) {
-    if (!ctype_xdigit($id)) {
-      // If the current ID is not a hexadecimal string then we need to make it
-      // as a hexadecimal string. Creating an md5 object and trim it to 24
-      // chars should fix it.
-      $id = substr(md5($id), 0, 24);
-    }
-    return $id;
-  }
+//  public static function prepareId($id) {
+//    if (!ctype_xdigit($id)) {
+//      // If the current ID is not a hexadecimal string then we need to make it
+//      // as a hexadecimal string. Creating an md5 object and trim it to 24
+//      // chars should fix it.
+//      $id = substr(md5($id), 0, 24);
+//    }
+//    return $id;
+//  }
 
 }

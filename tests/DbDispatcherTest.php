@@ -3,6 +3,7 @@
 namespace tests;
 
 use Nuntius\Db\DbQueryHandlerInterface;
+use Nuntius\Db\DbStorageHandlerInterface;
 use Nuntius\Db\MongoDB\MongoDBOperationHandler;
 use Nuntius\Db\RethinkDB\RethinkDbOperationHandler;
 use Nuntius\Nuntius;
@@ -215,16 +216,22 @@ class DbDispatcherTest extends TestsAbstract {
     // Set up some stuff.
     $id = $new_objects[0]['id'];
 
+    /**
+     * @return DbStorageHandlerInterface
+     */
     $getTable = function() use($db) {
       return $db->getStorage()->table('superheroes');
     };
+
 
     // Verify we can load.
     $object = $getTable()->load($id);
     $this->assertEquals($object['name'], 'Tony');
 
+
     // Verify we can update.
     $object['name'] = 'Clark';
+
     $getTable()->update($object);
     $object = $getTable()->load($id);
     $this->assertEquals($object['name'], 'Clark');
