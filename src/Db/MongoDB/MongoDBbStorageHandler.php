@@ -101,7 +101,7 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    */
   public function update($document) {
     $this->mongo->selectCollection($this->table)->updateOne(
-      ['_id' => self::prepareId($document['id'])],
+      ['_id' => new \MongoDB\BSON\ObjectId(self::prepareId($document['id']))],
       ['$set' => $document]
     );
     return $document;
