@@ -40,7 +40,16 @@ class NuntiusMongoDB {
    */
   function __construct(NuntiusConfig $config) {
     $info = $config->getSetting('mongodb');
-    $this->client = new Client($info['uri']);
+
+    $options = [];
+
+    if (!empty($info['username']) && !empty($info['password'])) {
+      // Setting up username and password.
+      $options['username'] = $info['username'];
+      $options['password'] = $info['password'];
+    }
+
+    $this->client = new Client($info['uri'], $options);
 
     $collection = $this->client;
     $this->connection = $collection->selectDatabase($info['db']);
