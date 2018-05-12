@@ -50,7 +50,16 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
     $result = $this->mongo->selectCollection($this->table)->insertOne($document);
 
     $id = $result->getInsertedId();
-    $document['id'] = $id->__toString();
+
+    if (!empty($document['id'])) {
+      if (self::isMongoIdObject($document['id'])) {
+        $document['id'] = $id->__toString();
+      }
+    }
+    else {
+      $document['id'] = $id->__toString();
+    }
+
     $document['_id'] = $id->__toString();
 
     // Setting the _id as the id thus ensure we can load later on.
@@ -142,6 +151,18 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
         '$in' => $ids,
         ]
       ]);
+  }
+
+  /**
+   * Alias for a function with complex name.
+   *
+   * @param $id
+   *  The ID we ned to check if it a MongoDB ID or not.
+   *
+   * @return bool
+   */
+  public static function isMongoIdObject($id) {
+    return ctype_xdigit($id);
   }
 
 }
