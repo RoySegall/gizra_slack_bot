@@ -51,6 +51,11 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
 
     $id = $result->getInsertedId();
     $document['id'] = $id->__toString();
+    $document['_id'] = $id->__toString();
+
+    // Setting the _id as the id thus ensure we can load later on.
+    $this->update($document);
+    unset($document['_id']);
 
     return $document;
   }
@@ -99,8 +104,21 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
    * {@inheritdoc}
    */
   public function update($document) {
+
+    if (empty($document['_id'])) {
+      // We don't have an _id. Looking for entities with id to update.
+      $filter = ['id' => $document['id']];
+    }
+    else {
+      // When creating a new entity we need to update the id with the _id
+      // property. That's will ensure that we can look for entities using the id
+      // property and not _id when using mongo and id when using other DB.
+      $filter = ['_id' => new \MongoDB\BSON\ObjectId($document['_id'])];
+      unset($document['_id']);
+    }
+
     $this->mongo->selectCollection($this->table)->updateOne(
-      ['id' => $document['id']],
+      $filter,
       ['$set' => $document]
     );
 
@@ -125,30 +143,5 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
         ]
       ]);
   }
-
-//  /**
-//   * Process a list of ids to a filterable list of ids.
-//   *
-//   * @param $ids
-//   *   The list of IDs.
-//   *
-//   * @return array
-//   *   Return a list of IDs which can be passed to the filter array.
-//   */
-//  public static function processIdsToFilter($ids) {
-//    return array_map(function($id) {
-//      return new \MongoDB\BSON\ObjectId(self::prepareId($id));
-//    }, $ids);
-//  }
-
-//  public static function prepareId($id) {
-//    if (!ctype_xdigit($id)) {
-//      // If the current ID is not a hexadecimal string then we need to make it
-//      // as a hexadecimal string. Creating an md5 object and trim it to 24
-//      // chars should fix it.
-//      $id = substr(md5($id), 0, 24);
-//    }
-//    return $id;
-//  }
 
 }
