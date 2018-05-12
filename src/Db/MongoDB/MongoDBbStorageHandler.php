@@ -86,7 +86,6 @@ class MongoDBbStorageHandler implements DbStorageHandlerInterface {
       $item = $doc->getArrayCopy();
 
       // Order the object.
-      $item['id'] = $item['_id']->__toString();
       unset($item['_id']);
 
       // Add to list.
