@@ -81,6 +81,7 @@ class FacebookWebooksTest extends WebhooksTestsAbstract {
       ->table('logger')
       ->condition('attachment', '', '!=')
       ->execute();
+    \Kint::dump($results);
 
     $this->assertEquals($results[0]['attachment']['payload']['text'], "hey there! This is the default help response You can try this one and override it later on. Hope you will get some ideas :)");
 
