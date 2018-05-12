@@ -23,7 +23,7 @@ cache:
 before_script:
 
   - echo $DRIVER
-  - bash set_mongodb.sh $DRIVER
+  - bash set_mongodb.sh
 
   # Installing composer
   - curl -sS https://getcomposer.org/installer | php
