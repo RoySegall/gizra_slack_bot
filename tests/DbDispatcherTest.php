@@ -68,7 +68,6 @@ class DbDispatcherTest extends TestsAbstract {
     $db = Nuntius::getDb();
 
     foreach ($dbs as $driver => $info) {
-      $db->setDriver($driver);
 
       foreach ($info as $method => $value) {
         $this->assertEquals($db->getMetadata()->{$method}(), $value);
