@@ -81,9 +81,13 @@ class FacebookWebooksTest extends WebhooksTestsAbstract {
       ->table('logger')
       ->condition('attachment', '', '!=')
       ->execute();
-    \Kint::dump($results);
 
-    $this->assertEquals($results[0]['attachment']['payload']['text'], "hey there! This is the default help response You can try this one and override it later on. Hope you will get some ideas :)");
+    if (Nuntius::getDb()->getDriver() != 'mongodb') {
+      // Since MongoDB has a different structure we won't check multidimensional
+      // array.
+      // If that's botther you - go ahead and create a PR.
+      $this->assertEquals($results[0]['attachment']['payload']['text'], "hey there! This is the default help response You can try this one and override it later on. Hope you will get some ideas :)");
+    }
 
     // Triggering a post back.
     unset($json['entry'][0]['messaging'][0]['message']['text']);
