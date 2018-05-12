@@ -85,6 +85,7 @@ class DbDispatcher {
    */
   public function getQuery() {
     $namespace = $this->getDriverController('query');
+    \Kint::dump($namespace);
 
     return new $namespace;
   }
