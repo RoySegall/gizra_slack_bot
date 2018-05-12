@@ -2,7 +2,7 @@
 
 namespace Nuntius\Commands;
 
-use Nuntius\Db\MongoDB\MongoDBTraitInstallation;
+use Nuntius\Db\MongoDB\MongoDbTraitInstallation;
 use Nuntius\Db\RethinkDB\RethinkDbTraitInstallation;
 use Nuntius\Nuntius;
 use Symfony\Component\Console\Command\Command;
