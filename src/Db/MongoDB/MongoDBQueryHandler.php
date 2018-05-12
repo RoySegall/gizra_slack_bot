@@ -86,13 +86,7 @@ class MongoDBQueryHandler implements DbQueryHandlerInterface {
     // Minor adjustment for MongoDB.
     if ($property == 'id') {
       $property = '_id';
-
-      if (is_array($value)) {
-        $value = MongoDBbStorageHandler::processIdsToFilter($value);
-      }
-      else {
-        $value = new ObjectId($value);
-      }
+      $value = new ObjectId($value);
     }
 
     if ($operator == 'CONTAINS') {
