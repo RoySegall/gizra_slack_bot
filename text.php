@@ -2,21 +2,15 @@
 
 require_once 'autoloader.php';
 
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+/** @var \Nuntius\System\Plugin\Cache\Memcache $cache */
+//$cache = \Nuntius\System\System::getCacheManager()->createInstance('memcache');
+//
+//d($cache->get('a'));
 
-\Nuntius\Nuntius::getCapsuleManager()->enableCapsule('capsule_test_secondary');
+$foo = \Nuntius\System\System::getEntityManager()->createInstance('system')->load('0161dd3c-b8af-4d84-b1cf-114c5162363e');
 
-/** @var \Nuntius\System\Plugin\Entity\System $entity */
-$entity = \Nuntius\System\System::getEntityManager()->createInstance('system');
+$ser = serialize($foo);
 
+$unser = unserialize($ser);
 
-$entity->name = 'Testing';
-$entity->machine_name = 'testing';
-$entity->description = 'testing entity';
-$entity->path = '.';
-$entity->status = 1;
-
-$entity = $entity->save();
-$entity->delete($entity->id);
+d($unser);

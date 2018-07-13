@@ -3,6 +3,7 @@
 namespace Nuntius\System;
 
 use Nuntius\Db\DbDispatcher;
+use Nuntius\Nuntius;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -57,7 +58,6 @@ abstract class EntityBase implements HookContainerInterface {
     $this->storage = $db->getStorage();
     $this->hooksDispatcher = $hooks_dispatcher;
     $this->entityPluginManager = $entity_plugin_manager;
-
     $this->validator = Validation::createValidator();
   }
 
@@ -492,6 +492,36 @@ abstract class EntityBase implements HookContainerInterface {
    */
   protected function constraints() {
     return [];
+  }
+
+  /**
+   * Keep only the properties we need to serialize.
+   *
+   * @return array
+   */
+  public function __sleep() {
+    return array_merge($this->properties, [
+      'plugin_id',
+      'properties',
+      'relations',
+      'hooksDispatcher',
+      'validator',
+      'entityPluginManager',
+      'namespace',
+      'provided_by',
+    ]);
+  }
+
+  /**
+   * Bring back the properties we removed while serializing.
+   *
+   * @throws \Exception
+   */
+  public function __wakeup() {
+    $this->dbDispatcher = Nuntius::container()->get('db');
+    $this->storage = $this->dbDispatcher->getStorage();
+    // Setting the storage.
+    $this->storage->table($this->plugin_id);
   }
 
 }
